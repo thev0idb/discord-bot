@@ -146,11 +146,11 @@ const resource = createAudioResource(ffmpeg.stdout, {
 
   session.player.play(resource);
 
-session.textChannel.send(
-🎵 **$DIL0**\n +
-👤 $DIL1\n +
-🔗 $DIL2
-).catch(() => {});
+  session.textChannel.send(
+    `🎵 **${track.name}**\n` +
+    `👤 ${track.artist_name}\n` +
+    `🔗 ${track.shareurl || 'Jamendo'}`
+  ).catch(() => {});
 }
 
 async function ensureSession(message) {
@@ -242,8 +242,8 @@ async function enqueue(message, track) {
   if (!session) return false;
 
 if (session.queue.length >= maxQueue) {
-await message.reply(Antrean penuh, maksimal $DIL0 lagu.);
-return false;
+    await message.reply(`Antrean penuh, maksimal ${maxQueue} lagu.`);
+    return false;
 }
 
   session.queue.push(track);
@@ -251,9 +251,7 @@ return false;
 if (session.player.state.status === AudioPlayerStatus.Idle) {
 playNext(message.guild.id);
 } else {
-await message.reply(
-➕ **$DIL0** — $DIL1 ditambahkan ke antrean.
-);
+    await message.reply(`➕ **${track.name}** — ${track.artist_name} ditambahkan ke antrean.`);
 }
 
 refreshSleep(message.guild.id);
