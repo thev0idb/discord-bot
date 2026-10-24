@@ -7,9 +7,8 @@ const { refreshSleep } = require('../music/player');
 async function handleMessage(message) {
   if (message.author.bot) return;
 
-// Log aktivitas pesan seperti kode testing awal.
-console.log($DIL0 - $DIL1);
-console.log(in $DIL2);
+console.log(`${message.author.tag} - ${message.author.id}`);
+console.log(`in ${message.guild ? message.guild.name : 'DM'}`);
 console.log(message.content);
 console.log('----------');
 
