@@ -20,7 +20,7 @@ await message.reply('Contoh: !play chill instrumental');
 return true;
 }
 
-await message.channel.send(🔎 Mencari lagu: **$DIL0** ...);
+await message.channel.send(`🔎 Mencari lagu: **${query}** ...`);
 
 try {
       const tracks = await searchTracks(query);
