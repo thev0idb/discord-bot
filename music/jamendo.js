@@ -1,40 +1,47 @@
-const { jamendoClientId } = require('../config');
+const { prefix } = require('../config');
+const { handleGeneral } = require('../commands/general');
+const { handleAdmin } = require('../commands/admin');
+const { handleMusic } = require('../commands/music');
+const { refreshSleep } = require('../music/player');
 
-async function searchTracks(query) {
-  const params = new URLSearchParams({
-    client_id: jamendoClientId,
-    format: 'json',
-    limit: '10',
-    search: query,
-    audioformat: 'mp31',
-    type: 'single albumtrack',
-  });
+async function handleMessage(message) {
+  if (message.author.bot) return;
 
-const url =
-https://api.jamendo.com/v3.0/tracks/?$DIL0;
+console.log(`${message.author.tag} - ${message.author.id}`);
+console.log(`in ${message.guild ? message.guild.name : 'DM'}`);
+console.log(message.content);
+console.log('----------');
 
-const response = await fetch(url, {
-    signal: AbortSignal.timeout(15000),
-  });
+refreshSleep(message.guild?.id);
 
-if (!response.ok) {
-throw new Error(Jamendo API HTTP $DIL0);
-}
+try {
+    if (await handleGeneral(message, message.content.trim().toLowerCase())) {
+      return;
+    }
 
-  const data = await response.json();
+    if (!message.guild) return;
+    if (!message.content.startsWith(prefix)) return;
 
-if (data.headers?.status !== 'success') {
-    throw new Error(
-      data.headers?.error_message || 'Jamendo API gagal'
-    );
+const parts = message.content
+      .slice(prefix.length)
+      .trim()
+      .split(/\s+/);
+
+const command = (parts.shift() || '').toLowerCase();
+    const args = parts;
+
+    if (!command) return;
+
+if (await handleGeneral(message, command)) return;
+    if (await handleAdmin(message, command)) return;
+    if (await handleMusic(message, command, args)) return;
+  } catch (error) {
+    console.error('[MessageHandler]', error);
+
+await message.reply(
+      'Terjadi kesalahan saat memproses pesan.'
+    ).catch(() => {});
   }
-
-return (data.results || []).filter(track =>
-typeof track.audio === 'string' &&
-track.audio.startsWith('https://') &&
-track.name &&
-track.artist_name
-);
 }
 
-module.exports = { searchTracks };
+module.exports = { handleMessage };
