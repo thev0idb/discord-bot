@@ -1,4 +1,3 @@
-
 const { ownerId } = require('../config');
 const {
   addAdmin,
