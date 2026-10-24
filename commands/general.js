@@ -1,4 +1,3 @@
-
 const path = require('node:path');
 const { AttachmentBuilder } = require('discord.js');
 const { getMenu } = require('../utils/menu');
